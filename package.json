@@ -1,0 +1,33 @@
+{
+  "name": "advent-of-code-2022",
+  "version": "1.0.0",
+  "description": "Problem-solving repo for my 2022 swipe at puzzles from https://adventofcode.com/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "npx nodemon",
+    "lint": "eslint . --ext .ts",
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanderspaul/advent-of-code-2022.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sanderspaul/advent-of-code-2022/issues"
+  },
+  "homepage": "https://github.com/sanderspaul/advent-of-code-2022#readme",
+  "devDependencies": {
+    "@types/node": "^18.11.10",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  }
+}
