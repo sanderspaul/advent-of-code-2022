@@ -39,40 +39,7 @@
 * Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
 * 
 */
-import fs from 'fs';
-import events from 'events';
-import readline from 'readline';
-import path from 'path';
-
-async function readCalorieTalliesFromFile() {
-  const calorieTallies: number[] = [0];
-  const rl = readline.createInterface({
-    input: fs.createReadStream(path.resolve(__dirname, './input.txt')),
-    crlfDelay: Infinity
-  });
-
-  rl.on('line', (line) => {
-    if (!line.length) {
-      addAnotherElf(calorieTallies);
-    } else {
-      const addedCalories = parseInt(line, 10);
-      addCaloriesToLastElf(addedCalories, calorieTallies);
-    }
-  });
-
-  await events.once(rl, 'close');
-  return calorieTallies;
-}
-
-function addAnotherElf(caloriesByElf: number[]): void {
-  caloriesByElf.push(0);
-}
-
-function addCaloriesToLastElf(cals: number, calsByElf: number[]): void {
-  const lastElfIndex = calsByElf.length - 1;
-  const currentElfCalories = calsByElf[lastElfIndex];
-  calsByElf[lastElfIndex] = currentElfCalories + cals;
-}
+import { readCalorieTalliesFromFile } from './utils';
 
 function getHungriestElfIndex(caloriesByElf: number[]): number {
   return caloriesByElf.reduce(
@@ -81,12 +48,9 @@ function getHungriestElfIndex(caloriesByElf: number[]): number {
   );
 }
 
-export async function logElfWithMostCalories(caloriesByElf: number[]) {
+export async function getElfWithMostCalories(caloriesByElf: number[]) {
   try {
     const elfWithMostCalories = getHungriestElfIndex(caloriesByElf);
-    console.log(
-      `Elf #${elfWithMostCalories} has the most calories: ${caloriesByElf[elfWithMostCalories]}`
-    );
     return {
       index: elfWithMostCalories,
       calories: caloriesByElf[elfWithMostCalories]
@@ -96,7 +60,13 @@ export async function logElfWithMostCalories(caloriesByElf: number[]) {
   }
 }
 
-(async function run() {
+export async function run() {
   const caloriesByElf = await readCalorieTalliesFromFile();
-  logElfWithMostCalories(caloriesByElf);
-})();
+  const { index, calories } =
+    (await getElfWithMostCalories(caloriesByElf)) ?? {};
+  if (index) {
+    console.log(`Elf #${index} has the most calories: ${calories}`);
+  } else {
+    console.log("Couldn't find any elves with calories!");
+  }
+}
