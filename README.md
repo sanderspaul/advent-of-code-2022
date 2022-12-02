@@ -11,6 +11,10 @@ together and make sure I brake nothing as I evolve things.
 
 ## Usage
 
+`npm run solution <filepath>`
+
+Runs a single solution file. (Ex: `npx ts-node ./src/day-1/solution-1.ts`)
+
 `npm run start:dev`
 
 Starts the application in development using nodemon and ts-node for hot reload.
