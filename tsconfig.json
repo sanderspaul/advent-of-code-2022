@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "lib": ["es6"],
-    "module": "commonjs",
-    "rootDir": "src",
-    "resolveJsonModule": true,
     "allowJs": false,
-    "outDir": "build",
+    "baseUrl": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "lib": ["es6"],
+    "module": "CommonJS",
     "noImplicitAny": true,
-    "skipLibCheck": true
+    "outDir": "build",
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES6"
   },
   "include": ["src/**/*"]
 }
