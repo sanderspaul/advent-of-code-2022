@@ -1,21 +1,12 @@
 import { readInputFileToStringArray } from '../lib/utils';
 import path from 'path';
-
-const MATCH_PLAY_SCORES = {
-  rock: 1,
-  paper: 2,
-  scissors: 3
-};
-
-const MATCH_RESULT_SCORES = {
-  win: 6,
-  draw: 3,
-  loss: 0
-};
-
-type MatchPlay = 'rock' | 'paper' | 'scissors';
-
-type MatchResult = 'win' | 'loss' | 'draw';
+import {
+  calcMatchScore,
+  CODE_TO_MATCHPLAY_MAP,
+  MatchPlay,
+  MatchResult,
+  Pair
+} from './match-utils';
 
 /**
  * The keys of the top-level record are player choices, while the keys of each
@@ -51,35 +42,6 @@ export function calcMatchResult(
   return POSSIBLE_MATCH_RESULTS[playerChoice][opponentChoice];
 }
 
-export function calcMatchScore(
-  matchResult: MatchResult,
-  playerChoice: MatchPlay
-): number {
-  const choiceScore = MATCH_PLAY_SCORES[playerChoice];
-  const matchResultScore = MATCH_RESULT_SCORES[matchResult];
-  return choiceScore + matchResultScore;
-}
-
-type Pair<T, K> = [T, K];
-
-interface CodeMatchPlayMap {
-  A: 'rock';
-  B: 'paper';
-  C: 'scissors';
-  X: 'rock';
-  Y: 'paper';
-  Z: 'scissors';
-  [others: string]: MatchPlay;
-}
-const CODE_TO_MATCHPLAY_MAP: CodeMatchPlayMap = {
-  A: 'rock',
-  B: 'paper',
-  C: 'scissors',
-  X: 'rock',
-  Y: 'paper',
-  Z: 'scissors'
-};
-
 function convertCodeToMatchPlayPair(code: string): Pair<MatchPlay, MatchPlay> {
   const [play1, play2] = code.split(' ').map((c) => CODE_TO_MATCHPLAY_MAP[c]);
   return [play1, play2];
@@ -114,8 +76,9 @@ export function run() {
             convertCodesToMatchPlays(matchCodes)
           )}`
         );
+      } else {
+        console.error(err);
       }
-      console.error(err);
     }
   );
 }

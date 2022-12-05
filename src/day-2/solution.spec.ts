@@ -1,4 +1,12 @@
-import { calcMatchResult, calcMatchScore, scoreStrategy } from './solution-1';
+import { calcMatchScore } from './match-utils';
+import {
+  calcMatchResult,
+  scoreStrategy as scoreStrategyByPlays
+} from './solution-1';
+import {
+  convertCodeToPlayResultPair,
+  scoreStrategyByPlayResult
+} from './solution-2';
 
 describe('Determining wins, losses and draws', () => {
   describe('when player picks ROCK', () => {
@@ -89,13 +97,39 @@ describe('Scoring matches', () => {
   });
 });
 describe('Scoring a play strategy', () => {
-  it('should score 15pt for the strategy: [rock, paper], [paper, rock], [scissors, scissors]', () => {
-    expect(
-      scoreStrategy([
-        ['rock', 'paper'],
-        ['paper', 'rock'],
-        ['scissors', 'scissors']
-      ])
-    ).toEqual(15);
+  describe('with the [opponentPlay, playerPlay] method', () => {
+    it('should score 15pt for the strategy: [rock, paper], [paper, rock], [scissors, scissors]', () => {
+      expect(
+        scoreStrategyByPlays([
+          ['rock', 'paper'],
+          ['paper', 'rock'],
+          ['scissors', 'scissors']
+        ])
+      ).toEqual(15);
+    });
+  });
+
+  describe('with the [opponentPlay, matchResult] method', () => {
+    it('should score 12pt for the strategy: [rock, draw] [paper, loss] [scissors, win]', () => {
+      expect(
+        scoreStrategyByPlayResult([
+          ['rock', 'draw'],
+          ['paper', 'loss'],
+          ['scissors', 'win']
+        ])
+      ).toEqual(12);
+    });
+  });
+});
+
+describe('Interpreting strategy codes as [opponentPlay, result]', () => {
+  it('should interpret [A, Y] as [rock, draw]', () => {
+    expect(convertCodeToPlayResultPair('A Y')).toEqual(['rock', 'draw']);
+  });
+  it('should interpret [B, X] as [paper, loss]', () => {
+    expect(convertCodeToPlayResultPair('B X')).toEqual(['paper', 'loss']);
+  });
+  it('should interpret [C, Z] as [scissors, win]', () => {
+    expect(convertCodeToPlayResultPair('C Z')).toEqual(['scissors', 'win']);
   });
 });
