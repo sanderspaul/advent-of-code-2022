@@ -1,62 +1,37 @@
 import {
-  findCommonCompartmentItem,
-  getAllCommonItemTypes,
-  getItemTypePriority,
-  getRucksackCompartments,
-  sumPriorityTypes
+  createRucksack,
+  findCommonItemType,
+  getRucksackItemTypePriority,
+  sumItemTypePriorities
 } from './solution-1';
 
-describe('Comparing compartments', () => {
-  it('should separate compartments contents into equal-length strings', () => {
-    const ruckackStringMock = 'vJrwpWtwJgWrhcsFMMfFFhFp';
-    const half1 = 'vJrwpWtwJgWr';
-    const half2 = 'hcsFMMfFFhFp';
-    const [compartment1, compartment2] =
-      getRucksackCompartments(ruckackStringMock);
-    expect(compartment1.length).toEqual(compartment2.length);
-    expect(half1).toEqual(compartment1);
-    expect(half2).toEqual(compartment2);
+describe('Rucksacks and compartments', () => {
+  it('should create a rucksack with two compartments of equal length', () => {
+    const itemsMock = 'vJrwpWtwJgWrhcsFMMfFFhFp';
+    const ruck = createRucksack(itemsMock);
+    expect(ruck.compartments[0].length).toBe(itemsMock.length / 2);
+    expect(ruck.compartments[0]).toBe('vJrwpWtwJgWr');
+    expect(ruck.compartments[1].length).toBe(itemsMock.length / 2);
+    expect(ruck.compartments[1]).toBe('hcsFMMfFFhFp');
+    expect(ruck.items).toStrictEqual(itemsMock);
   });
-
-  it('should return undefined when compartments share no common item', () => {
-    expect(findCommonCompartmentItem('aaa', 'bbb')).toBe(undefined);
-  });
-
-  it('should return "c" when compartments share that common character', () => {
-    expect(findCommonCompartmentItem('aca', 'bcb')).toBe('c');
+  it('should compare two compartments and return the first common item type to both', () => {
+    const itemsMock = 'vJrwpWtwJgWrhcsFMMfFFhFp';
+    const ruck = createRucksack(itemsMock);
+    expect(findCommonItemType(ruck.compartments)).toBe('p');
   });
 });
 
-describe('Comparing item type priority', () => {
-  it('should return priorities: 16 (p), 38 (L), 42 (P), 22 (v), 20 (t), and 19 (s)', () => {
-    expect(getItemTypePriority('p')).toBe(16);
-    expect(getItemTypePriority('L')).toBe(38);
-    expect(getItemTypePriority('P')).toBe(42);
-    expect(getItemTypePriority('v')).toBe(22);
-    expect(getItemTypePriority('t')).toBe(20);
-    expect(getItemTypePriority('s')).toBe(19);
+describe('Priorities', () => {
+  it('should return the priority of single item types', () => {
+    expect(getRucksackItemTypePriority('p')).toBe(16);
+    expect(getRucksackItemTypePriority('L')).toBe(38);
+    expect(getRucksackItemTypePriority('P')).toBe(42);
+    expect(getRucksackItemTypePriority('v')).toBe(22);
+    expect(getRucksackItemTypePriority('t')).toBe(20);
+    expect(getRucksackItemTypePriority('s')).toBe(19);
   });
-
-  it('should return ', () => {
-    const rucksacksMock: string[] = [
-      'vJrwpWtwJgWrhcsFMMfFFhFp',
-      'jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL',
-      'PmmdzqPrVvPwwTWBwg',
-      'wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn',
-      'ttgJtRGJQctTZtZT',
-      'CrZsJsPPZsGzwwsLwLmpwMDw'
-    ];
-    expect(getAllCommonItemTypes(rucksacksMock)).toStrictEqual([
-      'p',
-      'L',
-      'P',
-      'v',
-      't',
-      's'
-    ]);
-  });
-
-  it('should sum the priority types from a collection', () => {
-    expect(sumPriorityTypes(['p', 'L', 'P', 'v', 't', 's'])).toBe(157);
+  it('should sum the item types priority values', () => {
+    expect(sumItemTypePriorities(['p', 'L', 'P', 'v', 't', 's'])).toBe(157);
   });
 });

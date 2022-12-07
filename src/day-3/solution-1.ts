@@ -32,57 +32,58 @@
  *
  *  Find the item type that appears in both compartments of each rucksack. What is the sum of the priorities of those item types?
  */
-
 import path from 'path';
-import { readInputFileToStringArray } from '../../src/lib/utils';
+import { readInputFileToStringArray } from '../lib/utils';
 
-export function getRucksackCompartments(rucksackStr: string): [string, string] {
-  // Assumes that rucksacks always have equal numbers of items in each
-  // compartment, and therefore string lengths that are even
-  return [
-    rucksackStr.slice(0, rucksackStr.length / 2),
-    rucksackStr.slice(rucksackStr.length / 2, rucksackStr.length)
-  ];
+interface Rucksack {
+  items: string;
+  compartments: [string, string];
 }
 
-export function findCommonCompartmentItem(
-  c1: string,
-  c2: string
+export function createRucksack(items: string): Rucksack {
+  const compartmentLength = items.length / 2;
+  return {
+    items,
+    compartments: [
+      items.slice(0, compartmentLength),
+      items.slice(compartmentLength)
+    ]
+  };
+}
+
+export function findCommonItemType(
+  compartments: Rucksack['compartments']
 ): string | undefined {
-  for (const c of c1) {
-    if (c2.indexOf(c) > 0) {
-      return c;
+  const types = compartments[0].split('');
+  for (const char of compartments[1]) {
+    const found = types.find((c) => c === char);
+    if (found) {
+      return found;
     }
   }
   return;
 }
 
-const ALPHABET_LOWERCASE = 'abcdefghijklmnopqrstuvwxyz';
-const PRIORITIES = `${ALPHABET_LOWERCASE}${ALPHABET_LOWERCASE.toUpperCase()}`;
+const LOWERCASE_TYPES = 'abcdefghijklmnopqrstuvwxyz';
 
-export function getItemTypePriority(char: string): number {
-  const priority = PRIORITIES.indexOf(char);
-  if (priority > 0) {
-    return priority + 1;
+const ITEM_TYPES = [...LOWERCASE_TYPES, ...LOWERCASE_TYPES.toUpperCase()];
+
+export function getRucksackItemTypePriority(type: string): number | undefined {
+  const index = ITEM_TYPES.findIndex((t) => t === type);
+  if (index >= 0) {
+    return index + 1;
   }
-  return 0;
+  return;
 }
 
-export function sumPriorityTypes(types: string[]): number {
-  return types.reduce((prev, curr) => prev + getItemTypePriority(curr), 0);
-}
-
-export function getAllCommonItemTypes(rucksacks: string[]): string[] {
-  const commonItems: string[] = [];
-  rucksacks.reduce((prev, curr) => {
-    const compartments: [string, string] = getRucksackCompartments(curr);
-    const item = findCommonCompartmentItem(...compartments);
-    if (typeof item === 'string') {
-      prev.push(item);
+export function sumItemTypePriorities(types: string[]): number {
+  return types.reduce((prev, curr) => {
+    const priority = getRucksackItemTypePriority(curr);
+    if (priority !== undefined) {
+      return prev + priority;
     }
     return prev;
-  }, commonItems);
-  return commonItems;
+  }, 0);
 }
 
 export function run() {
@@ -90,11 +91,15 @@ export function run() {
     path.resolve(__dirname, './input.txt'),
     (err, data) => {
       if (!err) {
-        const commonItems = getAllCommonItemTypes(data);
-        const sum = sumPriorityTypes(commonItems);
-        console.log(
-          `The sum of the priorities of item types common to rucksack compartments: ${sum}`
-        );
+        const types = data.reduce((prev, curr) => {
+          const type = findCommonItemType(createRucksack(curr).compartments);
+          if (type) {
+            prev.push(type);
+          }
+          return prev;
+        }, [] as string[]);
+        const sum = sumItemTypePriorities(types);
+        console.log(`Sum of priorities of item types: ${sum}`);
       } else {
         console.error(err);
       }
