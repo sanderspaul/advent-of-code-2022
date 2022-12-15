@@ -45,17 +45,11 @@
 
 import path from 'path';
 import { readInputFileToStringArray } from '../../src/lib/utils';
-
-export function createAssignmentPairFromString(str: string): string[] {
-  return str.split(',');
-}
-
-export type Tuple = [number, number];
-
-export function createTupleFromRangeString(str: string): Tuple {
-  const [start, end] = str.split('-').map((n) => parseInt(n, 10));
-  return [start, end];
-}
+import {
+  createAssignmentPairFromString,
+  createTupleFromRangeString,
+  Tuple
+} from './utils';
 
 // Returns true if the first range contains the second fully (inclusive).
 export function rangeFullyContains(
