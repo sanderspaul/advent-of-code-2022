@@ -1,14 +1,15 @@
+import { getTopStackCratesForInput } from './solution-1';
+import { bulkTransferCrates } from './solution-2';
 import {
+  createStackCollectionFromDiagramLines,
   createStackCollectionFromLayers,
   createStackLayerFromString,
-  createStackCollectionFromDiagramLines,
-  transferCrates,
-  parseTupleFromProcedure,
   executeProcedures,
-  getTopStackCrates,
   getStackDiagramLines,
-  getTopStackCratesForInput
-} from './solution-1';
+  getTopStackCrates,
+  parseTupleFromProcedure,
+  transferSingleCrates
+} from './utils';
 
 const DIAGRAM_LINES = [
   '            [L] [M]         [M]    ',
@@ -80,13 +81,13 @@ describe('Rearranging crates', () => {
       ['V', 'S'],
       ['B', 'N']
     ];
-    expect(transferCrates(beforeStacks, 1, 2, 3)).toEqual(afterStacks);
+    expect(transferSingleCrates(beforeStacks, 1, 2, 3)).toEqual(afterStacks);
   });
 
   it('should move two crates from the top of stack 2 to stack 3', () => {
     const beforeStacks = [['T', 'F', 'A'], ['V', 'S', 'N'], ['B']];
-    const afterStacks = [['T', 'F', 'A'], ['V'], ['B', 'N', 'S']];
-    expect(transferCrates(beforeStacks, 2, 2, 3)).toEqual(afterStacks);
+    const afterStacks = [['T', 'F', 'A'], ['V'], ['B', 'S', 'N']];
+    expect(bulkTransferCrates(beforeStacks, 2, 2, 3)).toEqual(afterStacks);
   });
 
   it('should parse the tuple [7, 3, 9] from the procedure "move 7 from 3 to 9"', () => {
@@ -98,7 +99,7 @@ describe('Rearranging crates', () => {
     const afterStacks = [
       ['T', 'F'],
       ['V', 'A'],
-      ['B', 'N', 'S']
+      ['B', 'S', 'N']
     ];
     const result = executeProcedures(
       ['move 2 from 2 to 3', 'move 1 from 1 to 2'],
@@ -144,7 +145,7 @@ describe('Parsing crates input data', () => {
     expect(getStackDiagramLines(INPUT_LINES)).toEqual(crateDataLines);
   });
 
-  it('should return "RBLMGVMS" for the input lines provided', () => {
-    expect(getTopStackCratesForInput(INPUT_LINES)).toEqual('RBLMGVMS');
+  it('should return "RBLMGVMD" for the input lines provided', () => {
+    expect(getTopStackCratesForInput(INPUT_LINES)).toEqual('RBLMGVMD');
   });
 });
